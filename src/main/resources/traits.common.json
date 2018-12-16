@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "package": "net.redstoneparadox.traits.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "TraitEntityMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
