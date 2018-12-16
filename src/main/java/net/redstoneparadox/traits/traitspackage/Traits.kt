@@ -55,7 +55,7 @@ class Traits {
                 for (template in traitTemplates) {
 
                     if (rolledWeight <= template.weight) {
-                        traitEntity.addTrait(template.build(1))
+                        traitEntity.addTrait(buildTrait(template))
                         counter += 1
                         break
                     }
@@ -69,9 +69,6 @@ class Traits {
         }
 
         private fun buildTrait(template : Trait) : Trait {
-            var name : String = template.name
-            var tickable : Boolean = template.tickable
-
             return template.build(1)!!
         }
 
