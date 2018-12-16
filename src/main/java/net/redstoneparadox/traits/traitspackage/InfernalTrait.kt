@@ -1,13 +1,13 @@
 package net.redstoneparadox.traits.traitspackage
 
-import net.minecraft.entity.LivingEntity
+import net.minecraft.entity.mob.MobEntity
 
 /**
  * Created by RedstoneParadox on 12/14/2018.
  */
-class InfernalTrait(weight: Int, tickable: Boolean, name: String) : BaseTrait(weight, tickable, name) {
+class InfernalTrait(name: String, weight: Int, tickable: Boolean, minLevel: Int, maxLevel: Int) : Trait(name, weight, tickable, minLevel, maxLevel) {
 
-    override fun tickTarget(target: LivingEntity) {
+    override fun tickTarget(target: MobEntity) {
 
 
     }

@@ -7,7 +7,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.world.World;
-import net.redstoneparadox.traits.traitspackage.BaseTrait;
+import net.redstoneparadox.traits.traitspackage.Trait;
 import net.redstoneparadox.traits.traitspackage.ITraitEntity;
 import net.redstoneparadox.traits.traitspackage.Traits;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 @Mixin(MobEntity.class)
 public abstract class TraitEntityMixin extends LivingEntity implements ITraitEntity {
 
-    public ArrayList<BaseTrait> traits = new ArrayList<>();
+    public ArrayList<Trait> traits = new ArrayList<>();
 
     public TraitEntityMixin(EntityType<?> var1, World var2) {
         super(var1, var2);
@@ -35,10 +35,10 @@ public abstract class TraitEntityMixin extends LivingEntity implements ITraitEnt
 
         if (!traits.isEmpty()) {
 
-            for (BaseTrait trait : traits) {
+            for (Trait trait : traits) {
                 if (trait.getTickable()) {
 
-                    trait.tickTarget((LivingEntity) (Object) this);
+                    trait.tickTarget((MobEntity) (Object) this);
                 }
             }
 
@@ -51,10 +51,10 @@ public abstract class TraitEntityMixin extends LivingEntity implements ITraitEnt
 
             ListTag traitsTag = var1.getList("Traits", 9);
 
-            traits = Traits.TraitFactory.getTraitsFromTag(traitsTag);
+            traits = Traits.TraitBuilder.getTraitsFromTag(traitsTag);
         }
         else {
-            net.redstoneparadox.traits.traitspackage.Traits.TraitFactory.applyTrait((LivingEntity) (Object) this);
+            Traits.TraitBuilder.applyRandomTraits((ITraitEntity) (Object) this);
         }
     }
 
@@ -63,7 +63,7 @@ public abstract class TraitEntityMixin extends LivingEntity implements ITraitEnt
 
         ListTag traitsTag = new ListTag();
 
-        for (BaseTrait trait : traits) {
+        for (Trait trait : traits) {
 
             String name = trait.getName();
 
@@ -74,7 +74,7 @@ public abstract class TraitEntityMixin extends LivingEntity implements ITraitEnt
     }
 
     @Override
-    public void addTrait(BaseTrait trait) {
+    public void addTrait(Trait trait) {
         traits.add(trait);
     }
 }

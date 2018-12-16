@@ -1,12 +1,11 @@
 package net.redstoneparadox.traits.traitspackage
 
-import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.boss.EntityWither
 import net.minecraft.entity.boss.dragon.EnderDragonEntity
 import net.minecraft.entity.passive.PassiveEntity
-import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.StringTag
+import kotlin.random.Random
 
 /**
  * Created by RedstoneParadox on 12/14/2018.
@@ -14,40 +13,78 @@ import net.minecraft.nbt.StringTag
 class Traits {
 
     fun initTraits() {
-        consoleSpamTrait = ConsoleSpamTrait(1, true, "console_spam")
+
+        if (!traitTemplates.isEmpty()) {
+            return
+        }
+            consoleSpamTrait = addTrait(ConsoleSpamTrait("console_spammer", 1, true, 1, 1))
     }
 
-    fun registerTrait(trait: BaseTrait) : BaseTrait {
-        traitRegistry.add(trait)
-        return trait
-    }
+    companion object TraitBuilder{
 
-    companion object TraitFactory{
+        var traitTemplates : ArrayList<Trait> = ArrayList()
 
-        var traitRegistry : ArrayList<BaseTrait> = ArrayList()
+        lateinit var infernalTrait: Trait
+        lateinit var consoleSpamTrait: Trait
 
-        lateinit var infernalTrait: BaseTrait
-        lateinit var consoleSpamTrait: ConsoleSpamTrait
+        var totalWeight : Int = 0
 
-        fun applyTrait(target: LivingEntity) {
+        private fun addTrait(trait: Trait) : Trait {
+            traitTemplates.add(trait)
+            totalWeight += trait.weight
+            return trait
+        }
 
-            if (target is PlayerEntity || target is EnderDragonEntity || target is PassiveEntity || target is EntityWither) {
+        fun applyRandomTraits(traitEntity: ITraitEntity) {
+
+            if (traitEntity is EnderDragonEntity || traitEntity is PassiveEntity || traitEntity is EntityWither) {
                 return
             }
 
-            (target as ITraitEntity).addTrait(consoleSpamTrait.copy())
+            var traitAmount : Int = Random.nextInt(0, 3)
+
+            if (traitAmount == 0) {
+                return
+            }
+
+            var counter = 1
+
+            while (counter <= traitAmount) {
+
+                var rolledWeight: Int = Random.nextInt(1, totalWeight)
+                for (template in traitTemplates) {
+
+                    if (rolledWeight <= template.weight) {
+                        traitEntity.addTrait(template.build(1))
+                        counter += 1
+                        break
+                    }
+                    else {
+                        rolledWeight -= template.weight
+                    }
+
+                }
+
+            }
         }
 
-        fun getTraitsFromTag(listTag: ListTag): java.util.ArrayList<BaseTrait> {
+        private fun buildTrait(template : Trait) : Trait {
+            var name : String = template.name
+            var tickable : Boolean = template.tickable
 
-            val traitArray : ArrayList<BaseTrait> = ArrayList()
+            return template.build(1)!!
+        }
 
-            for (trait in traitRegistry) {
+        fun getTraitsFromTag(listTag: ListTag): java.util.ArrayList<Trait> {
+
+            val traitArray : ArrayList<Trait> = ArrayList()
+
+            for (trait in traitTemplates) {
 
                 val name : StringTag = StringTag(trait.name)
 
                 if (listTag.contains(name)) {
-                    traitArray.add(trait.copy())
+                    traitArray.add(trait.build(1)!!)
                 }
             }
 

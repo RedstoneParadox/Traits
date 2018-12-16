@@ -5,5 +5,5 @@ package net.redstoneparadox.traits.traitspackage;
  */
 public interface ITraitEntity {
 
-    void addTrait(BaseTrait trait);
+    void addTrait(Trait trait);
 }
