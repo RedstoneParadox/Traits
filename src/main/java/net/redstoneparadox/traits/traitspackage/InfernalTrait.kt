@@ -5,7 +5,7 @@ import net.minecraft.entity.mob.MobEntity
 /**
  * Created by RedstoneParadox on 12/14/2018.
  */
-class InfernalTrait(name: String, weight: Int, tickable: Boolean, minLevel: Int, maxLevel: Int) : Trait(name, weight, tickable, minLevel, maxLevel) {
+class InfernalTrait : Trait() {
 
     override fun tickTarget(target: MobEntity) {
 

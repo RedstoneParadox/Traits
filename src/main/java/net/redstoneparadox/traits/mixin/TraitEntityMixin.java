@@ -7,9 +7,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.world.World;
-import net.redstoneparadox.traits.traitspackage.Trait;
 import net.redstoneparadox.traits.traitspackage.ITraitEntity;
-import net.redstoneparadox.traits.traitspackage.Traits;
+import net.redstoneparadox.traits.traitspackage.Trait;
+import net.redstoneparadox.traits.traitspackage.TraitFactory;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -51,10 +51,10 @@ public abstract class TraitEntityMixin extends LivingEntity implements ITraitEnt
 
             ListTag traitsTag = var1.getList("Traits", 9);
 
-            traits = Traits.TraitBuilder.getTraitsFromTag(traitsTag);
+            traits = TraitFactory.INSTANCE.getTraitsFromTag(traitsTag);
         }
         else {
-            Traits.TraitBuilder.applyRandomTraits((ITraitEntity) (Object) this);
+            traits = TraitFactory.INSTANCE.applyRandomTraits(this);
         }
     }
 
